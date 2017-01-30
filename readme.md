@@ -1,7 +1,7 @@
 ## qTube
 
 Create REST API with authentication using Laravel Passport for a youtube like app using vue.js as front end.
- Tutorial is covered [here](http://www.qcode.in/create-rest-api-with-authentication-using-laravel-passport)
+ Tutorial is covered [here](http://www.qcode.in/create-rest-api-authentication-using-laravel-passport/)
 
 ## About Laravel
 
