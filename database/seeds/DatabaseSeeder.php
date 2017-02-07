@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         $this->command->info("Creating {$numberOfUser} users, each will have a channel associated.");
 
         // Create the channel, it will create a user and assign the channel
-        $channels = factory(App\Channel::class, $numberOfUser)->create();
+        $channels = factory(App\Channel::class, intval($numberOfUser))->create();
 
         $this->command->info('Users Created!');
 
