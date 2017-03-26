@@ -61,6 +61,11 @@ class Video extends Model
         ]);
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class)->select('id', 'name');
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
