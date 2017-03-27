@@ -14,7 +14,7 @@ class AddCategoryIdOnVideosTable extends Migration
     public function up()
     {
         Schema::table('videos', function (Blueprint $table) {
-            $table->unsignedInteger('category_id')->nullable();
+            $table->unsignedInteger('category_id')->after('user_id')->nullable();
             $table->foreign('category_id')->references('id')->on('videos')
                 ->onDelete('cascade');
         });

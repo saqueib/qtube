@@ -42,6 +42,28 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('Users Created!');
 
+        // Seed the categories for video
+
+        $categories = [
+            'Film & Animation',
+            'Cars & Vehicles',
+            'Music',
+            'Pets & Animals',
+            'Travel & Events',
+            'Gaming',
+            'Comedy',
+            'Entertainment',
+            'News & Politics',
+            'How-to & Style',
+            'Education',
+            'Science & Technology',
+            'Non-profits & Activism'
+        ];
+
+        foreach ($categories as $category) {
+            factory(App\Category::class)->create(['name' => $category]);
+        }
+
         // How many videos per channel
         $videoRange = $this->command->ask('How many videos per channel should have, give a range ?', '10-20');
 

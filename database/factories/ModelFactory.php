@@ -36,6 +36,12 @@ $factory->define(App\Channel::class, function(\Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Category::class, function(\Faker\Generator $faker) {
+    return [
+        'name' => ucfirst($faker->words(rand(5,20), true))
+    ];
+});
+
 $factory->define(App\Video::class, function(\Faker\Generator $faker) {
     return [
         'title' => ucfirst($faker->words(rand(5,20), true)),
@@ -47,6 +53,10 @@ $factory->define(App\Video::class, function(\Faker\Generator $faker) {
         'views' => $faker->randomDigit,
         'user_id' => function () {
             return App\User::inRandomOrder()->first()->id;
+        },
+        'category_id' => function() {
+            $category = App\Category::inRandomOrder()->first();
+            return $category ? $category->id : factory(App\Category::class)->create()->id;
         }
     ];
 });
