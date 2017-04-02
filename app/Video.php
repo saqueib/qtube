@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Video extends Model
@@ -14,7 +15,7 @@ class Video extends Model
     protected $fillable = [
        'title', 'description', 'published',
         'url', 'thumbnail', 'allow_comments',
-        'channel_id', 'user_id'
+        'channel_id', 'category_id', 'user_id'
     ];
 
     protected $casts = [
@@ -33,6 +34,7 @@ class Video extends Model
         $createRule = [
             'title' => 'required|max:200',
             'description' => 'required|min:10',
+            'category_id' => 'required|integer',
             'allow_comments' => 'boolean',
             'url' => 'required|url',
             'thumbnail' => 'required|url',
@@ -47,6 +49,16 @@ class Video extends Model
         ];
 
         return $forUpdate ? $updateRule : $createRule;
+    }
+
+    public function getCreatedAtAttribute($val)
+    {
+        return Carbon::parse($val)->diffForHumans();
+    }
+
+    public function getUpdatedAtAttribute($val)
+    {
+        return Carbon::parse($val)->toFormattedDateString();
     }
 
     public function channel()

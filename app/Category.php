@@ -8,7 +8,7 @@ class Category extends Model
 {
     protected $fillable = ['name'];
 
-    public function hasMany()
+    public function videos()
     {
         return $this->hasMany(Video::class);
     }

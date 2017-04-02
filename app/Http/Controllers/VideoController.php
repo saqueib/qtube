@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Video;
 use App\API\ApiHelper;
 use App\Repos\Repository;
@@ -32,11 +33,27 @@ class VideoController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->model->with('user')->latest()->paginate();
+        $query = $this->model->with(['channel']);
+
+        // check for trending
+        if ( $request->has('trending')) {
+            $query->orderBy('views', 'desc');
+        }
+
+        // paginate the result
+        $paginated = $query->latest()->paginate()->toArray();
+
+        // check for categories
+        if ($request->has('categories')) {
+            $paginated['categories'] = Category::select('id', 'name')->get();
+        }
+
+        return $paginated;
     }
 
     /**
@@ -63,12 +80,23 @@ class VideoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        return $this->model->with('user')->findOrFail($id);
+        $video =  $this->model->with(['channel', 'category'])->findOrFail($id);
+
+        // check related video requested
+        if( $request->has('related') ) {
+            $video->related = $this->model->with(['channel'])->inRandomOrder()->limit(16)->get();
+        }
+
+        // update view count
+        $video->increment('views');
+
+        return $video;
     }
 
     /**

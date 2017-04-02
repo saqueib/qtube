@@ -17,8 +17,6 @@ require('bootstrap-sass');
  */
 
 window.Vue = require('vue');
-require('vue-resource');
-
 window.axios = require('axios');
 
 /**
@@ -27,11 +25,8 @@ window.axios = require('axios');
  * included with Laravel will automatically verify the header's value.
  */
 
-Vue.http.interceptors.push((request, next) => {
-    request.headers.set('X-CSRF-TOKEN', Laravel.csrfToken);
-
-    next();
-});
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = Laravel.csrfToken;
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -39,9 +34,20 @@ Vue.http.interceptors.push((request, next) => {
  * allows your team to easily build robust real-time web applications.
  */
 
+
 // import Echo from "laravel-echo"
 
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
+
+/**
+ * Vue Progress bar to show youtube like progress bar on ajax calls
+ */
+import VueProgressBar from 'vue-progressbar'
+Vue.use(VueProgressBar, {
+    color: '#ce1126',
+    failedColor: 'red',
+    height: '2px'
+});

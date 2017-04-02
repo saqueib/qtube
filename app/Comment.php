@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
@@ -37,6 +38,11 @@ class Comment extends Model
         ];
 
         return $forUpdate ? $updateRule : $createRule;
+    }
+
+    public function getCreatedAtAttribute($val)
+    {
+        return Carbon::parse($val)->diffForHumans();
     }
 
     public function user()

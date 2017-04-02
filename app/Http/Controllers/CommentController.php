@@ -58,8 +58,10 @@ class CommentController extends Controller
         // run the validation
         $this->beforeCreate($request);
 
-        return $request->user()->comments()
+        $comment = $request->user()->comments()
             ->create( $request->only($this->model->getModel()->fillable));
+
+        return $this->model->with('user')->find($comment->id);
     }
 
     /**

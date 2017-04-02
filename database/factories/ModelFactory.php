@@ -28,7 +28,7 @@ $factory->define(App\Channel::class, function(\Faker\Generator $faker) {
     return [
         'name' => $faker->company,
         'logo' => $faker->imageUrl(60, 60),
-        'cover' => $faker->imageUrl(),
+        'cover' => $faker->imageUrl(944, 320),
         'about' => $faker->text(rand(100, 500)),
         'user_id' => function () {
             return factory(App\User::class)->create()->id;
@@ -46,9 +46,9 @@ $factory->define(App\Video::class, function(\Faker\Generator $faker) {
     return [
         'title' => ucfirst($faker->words(rand(5,20), true)),
         'description' => $faker->realText(rand(80, 600)),
-        'published' => $faker->boolean(),
+        'published' => $faker->boolean(95),
         'url' => $faker->url,
-        'thumbnail' => $faker->imageUrl(640, 480, null, true),
+        'thumbnail' => $faker->imageUrl(336, 188, null, true),
         'allow_comments' => $faker->boolean(80),
         'views' => $faker->randomDigit,
         'user_id' => function () {
@@ -57,7 +57,8 @@ $factory->define(App\Video::class, function(\Faker\Generator $faker) {
         'category_id' => function() {
             $category = App\Category::inRandomOrder()->first();
             return $category ? $category->id : factory(App\Category::class)->create()->id;
-        }
+        },
+        'created_at' => $faker->dateTimeThisMonth
     ];
 });
 
@@ -69,6 +70,7 @@ $factory->define(App\Comment::class, function(\Faker\Generator $faker) {
         },
         'user_id' => function () {
             return App\User::inRandomOrder()->first()->id;
-        }
+        },
+        'created_at' => $faker->dateTimeThisMonth
     ];
 });

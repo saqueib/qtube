@@ -15,14 +15,18 @@
 
     <!-- Scripts -->
     <script>
-        window.Laravel = {!! json_encode([
-            'csrfToken' => csrf_token(),
-        ]) !!};
+        window.Laravel = {!! json_encode(['csrfToken' => csrf_token()]) !!};
+
+        @if(Auth::check())
+            window.Laravel.Auth = {!! json_encode( Auth::user() ) !!};
+            window.Laravel.Auth.Videos = {!! json_encode( Auth::user()->videos()->with(['channel', 'category'])->limit(4)->latest()->get() ) !!};
+            window.Laravel.Channel = {!! json_encode( Auth::user()->channels()->select('id', 'name', 'logo')->first() ) !!};
+        @endif
     </script>
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
 
@@ -36,29 +40,57 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        {<span class="glyphicon glyphicon-play"></span>} {{ config('app.name', 'Laravel') }}
                     </a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
+                    <form class="navbar-form navbar-left">
+                        <div class="form-group">
+                            <input name="q" type="search" class="form-control" placeholder="Search">
+                        </div>
+                        <button type="submit" class="btn btn-default btn-search">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </form>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
                         @if (Auth::guest())
-                            <li><a href="{{ url('/login') }}">Login</a></li>
-                            <li><a href="{{ url('/register') }}">Register</a></li>
+                            <li>
+                                <p class="navbar-btn">
+                                    <a class="btn btn-primary" href="{{ url('/login') }}">Sign In</a>
+                                </p>
+                            </li>
+                            <li><a href="{{ url('/register') }}">Sign Up</a></li>
                         @else
+                            <li>
+                                <router-link :to="{name: 'UploadPage'}">
+                                    <span class="glyphicon glyphicon-open"></span>
+                                </router-link>
+                            </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    <span class="glyphicon glyphicon-bell"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li class="dropdown-header">No Notification</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    <span class="glyphicon glyphicon-user"></span> <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                    <li class="dropdown-header">{{ Auth::user()->name }}</li>
+                                    <li>
+                                        <router-link :to="{ name: 'AccountPage' }">
+                                            My Account
+                                        </router-link>
+                                    </li>
+                                    <li class="nav-divider"></li>
                                     <li>
                                         <a href="{{ url('/logout') }}"
                                             onclick="event.preventDefault();
@@ -79,6 +111,12 @@
         </nav>
 
         @yield('content')
+
+        <footer>
+            <div class="text-center mt">
+                <p>This is a demo for YouTube like app using Vue.js &amp; Laravel by <a target="_blank" href="http://www.QCode.in">www.QCode.in</a></p>
+            </div>
+        </footer>
     </div>
 
     <!-- Scripts -->
